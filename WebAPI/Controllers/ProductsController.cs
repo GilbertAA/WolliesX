@@ -17,6 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("sort")]
         public IActionResult GetProducts( [FromQuery] SortOption sortOption)
         {
             try
