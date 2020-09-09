@@ -62,7 +62,6 @@ namespace WebAPI.Services
 
             return productDict.Values.ToList()
                 .OrderByDescending(p => p.SoldCount)
-                .ThenByDescending(p => p.Quantity)
                 .Select(p => p.ToProduct()).ToList();
         }
     }
