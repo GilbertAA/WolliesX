@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using WebAPI.Entity;
+using WebAPI.Enum;
 
 namespace WebAPI.Services
 {

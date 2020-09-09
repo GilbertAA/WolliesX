@@ -6,7 +6,7 @@ namespace WebAPI.Services
     {
         public UserViewModel GetUser()
         {
-            return new UserViewModel{Name = Constants.Name, Token = Constants.Token};
+            return new UserViewModel { Name = Constants.Name, Token = Constants.Token };
         }
     }
 }

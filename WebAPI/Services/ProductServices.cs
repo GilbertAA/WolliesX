@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using WebAPI.Entity;
+using WebAPI.Enum;
 
 namespace WebAPI.Services
 {
@@ -9,9 +9,9 @@ namespace WebAPI.Services
     {
         private readonly IResourceService _resourceService;
 
-        public ProductServices()
+        public ProductServices(IResourceService resourceService)
         {
-            _resourceService = new ResourceService();
+            _resourceService = resourceService;
         }
 
         public List<Product> GetProducts(SortOption sortOption)

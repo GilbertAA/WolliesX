@@ -1,24 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace WebAPI.Util
 {
-    public class HttpClientWrapper
+    public class HttpClientWrapper : IHttpClientWrapper
     {
-        private static System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public static async Task<T> Get<T>(Uri url)
+        public HttpClientWrapper(IHttpClientFactory httpClientFactory)
         {
-            var response = httpClient.GetAsync(url).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(json);
-            }
+            _httpClientFactory = httpClientFactory;
+        }
 
-            return default(T);
+        public async Task<T> Get<T>(Uri url)
+        {
+            using var client = _httpClientFactory.CreateClient(Constants.Token);
+            var response = await client.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return default(T);
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(json);
+
         }
     }
 }

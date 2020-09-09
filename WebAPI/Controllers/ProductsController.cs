@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using WebAPI.Entity;
-using WebAPI.Exception;
+using WebAPI.Enum;
 using WebAPI.Services;
 
 namespace WebAPI.Controllers
@@ -14,9 +11,9 @@ namespace WebAPI.Controllers
     {
         private readonly IProductServices _productServices;
 
-        public ProductsController()
+        public ProductsController(IProductServices productServices)
         {
-            _productServices = new ProductServices();
+            _productServices = productServices;
         }
 
         [HttpGet]

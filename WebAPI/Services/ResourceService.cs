@@ -15,6 +15,13 @@ namespace WebAPI.Services
         private const string UrlPathProducts = UrlPathBase + "products";
         private const string UrlPathShopperHistory = UrlPathBase + "shopperHistory";
 
+        private readonly IHttpClientWrapper _httpClientWrapper;
+
+        public ResourceService(IHttpClientWrapper httpClientWrapper)
+        {
+            _httpClientWrapper = httpClientWrapper;
+        }
+
         public List<Product> GetProducts()
         {
             var result = GetResource<List<Product>>(UrlPathProducts).Result;
@@ -39,11 +46,11 @@ namespace WebAPI.Services
 
         private async Task<T> GetResource<T>(string path)
         {
-            var finalUrl = ConstructFinalUrl<T>(path);
-            return await HttpClientWrapper.Get<T>(finalUrl);
+            var finalUrl = ConstructFinalUrl(path);
+            return await _httpClientWrapper.Get<T>(finalUrl);
         }
 
-        private static Uri ConstructFinalUrl<T>(string path)
+        private static Uri ConstructFinalUrl(string path)
         {
             var url = UrlCombine.Combine(Constants.UrlResourceBase, path);
             var tokenParam = new Dictionary<string, string>
