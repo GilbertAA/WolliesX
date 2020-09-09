@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.WebUtilities;
-using UrlCombineLib;
 using WebAPI.Entity;
 using WebAPI.Exception;
 using WebAPI.Util;
@@ -46,19 +43,8 @@ namespace WebAPI.Services
 
         private async Task<T> GetResource<T>(string path)
         {
-            var finalUrl = ConstructFinalUrl(path);
+            var finalUrl = UrlConstructor.ConstructUri(path);
             return await _httpClientWrapper.Get<T>(finalUrl);
-        }
-
-        private static Uri ConstructFinalUrl(string path)
-        {
-            var url = UrlCombine.Combine(Constants.UrlResourceBase, path);
-            var tokenParam = new Dictionary<string, string>
-            {
-                {Constants.UrlParamToken, Constants.Token}
-            };
-            var finalUrl = new Uri(QueryHelpers.AddQueryString(url, tokenParam));
-            return finalUrl;
         }
     }
 }

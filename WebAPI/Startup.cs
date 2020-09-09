@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using WebAPI.Middleware;
 using WebAPI.Services;
 using WebAPI.Util;
 
@@ -28,21 +28,21 @@ namespace WebAPI
 
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<IProductServices, ProductServices>();
+            services.AddScoped<ITrolleyService, TrolleyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            //if (env.IsDevelopment())
+            //{
                 app.UseDeveloperExceptionPage();
-            }
+            //}
 
+            app.UseRequestRequestLogMiddleware();
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

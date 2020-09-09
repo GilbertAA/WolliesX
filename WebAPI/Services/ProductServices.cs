@@ -38,31 +38,20 @@ namespace WebAPI.Services
 
         private List<Product> GetSortedRecommended()
         {
-            var history = _resourceService.GetShopperHistory();
-            var productDict = new Dictionary<string, RecommendedProduct>();
-
-            foreach (var shopperHistory in history)
-            {
-                foreach (var product in shopperHistory.Products)
+            // get all products
+            var products = _resourceService.GetProducts();
+            // get products in customer order
+            var customerOrders = _resourceService.GetShopperHistory();
+            var productsInCustomerOrder = customerOrders.SelectMany(c => c.Products).ToList();
+            var recommendedProducts = products.Select(
+                product => new RecommendedProduct
                 {
-                    var prodName = product.Name;
-                    if (productDict.ContainsKey(prodName))
-                    {
-                        var prod = productDict[prodName];
-                        prod.Quantity += product.Quantity;
-                        prod.SoldCount += 1;
-                    }
-                    else
-                    {
-                        var newProd = new RecommendedProduct { Name = product.Name, Price = product.Price, Quantity = product.Quantity, SoldCount = 1 };
-                        productDict.Add(prodName, newProd);
-                    }
-                }
-            }
+                    Product = product, 
+                    SoldCount = productsInCustomerOrder.Count(p => p.Name == product.Name)
+                }).ToList();
 
-            return productDict.Values.ToList()
-                .OrderByDescending(p => p.SoldCount)
-                .Select(p => p.ToProduct()).ToList();
+            var sorted = recommendedProducts.OrderByDescending(x => x.SoldCount).ToList();
+            return sorted.Select(x => x.Product).ToList();
         }
     }
 }
